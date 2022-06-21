@@ -13,8 +13,11 @@ table, th,tr,td{
 tr,th,td{
   padding:8px;
 }
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 .search-wrapper{
-  margin:2rem;
+  margin:1rem;
 }
 .search{
   padding: 8px;
@@ -34,4 +37,8 @@ button {
   font-size: 15px;
   margin-left: 10px;
   cursor: pointer;
+}
+.page-container{
+  margin: auto;
+  width: 70vw;
 }
