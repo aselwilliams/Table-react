@@ -4,14 +4,23 @@ import { useState } from 'react';
 import Paginate from './components/Paginate';
 import { nanoid } from 'nanoid';
 import ReadOnlyRow from './components/ReadOnlyRow';
+import EditableRow from './components/EditableRow';
 
 function App() {
   const [users, setUsers]=useState(Users)
   const [query, setQuery] =useState('')
   const [itemsPerPage,setItemsPerPage]=useState(5)
   const [currentPage,setCurrentPage]=useState(1)
+  const [editId,setEditId]=useState(null)
   // const [currentContacts,setCurrentContacts]=useState([])
   const [addFormData,setAddFormData]=useState({
+    id:'',
+    firstName:'',
+    lastName:'',
+    email:'',
+    gender:'' 
+  })
+  const [editFormData, setEditFormData]=useState({
     id:'',
     firstName:'',
     lastName:'',
@@ -27,6 +36,18 @@ function App() {
     newFormData[fieldName]=fieldValue;
     setAddFormData(newFormData)
   }
+
+  const handleEditFormChange=(e)=>{
+    e.preventDefault();
+
+    const fieldName=e.target.getAttribute('name');
+    const fieldValue=e.target.value;
+
+    const newFormData={...editFormData}
+    newFormData[fieldName]=fieldValue;
+    setEditFormData(newFormData)
+  }
+
   const handleAddFormSubmit=(e)=>{
     e.preventDefault();
 
@@ -41,6 +62,23 @@ function App() {
     setUsers(newUsers)
   }
  
+const handleEditFormSubmit=(e)=>{
+  e.preventDefault();
+
+  const editedUser={
+    id:editId,
+      firstName: editFormData.firstName,
+      lastName: editFormData.lastName,
+      email: editFormData.email,
+      gender:editFormData.gender
+  }
+  const newUsers=[...users]
+  const index=users.findIndex((user)=>user.id===editId)
+  newUsers[index]=editedUser;
+  setUsers(newUsers);
+  setEditId(null)
+}
+
   const changePage=(num)=>{
       setCurrentPage(num)
   }
@@ -61,6 +99,20 @@ function App() {
     setUsers(copy.filter((el)=>el.id!==id))
    
   }
+
+  const handleEdit=(e, item)=>{
+    e.preventDefault()
+    setEditId(item.id)
+
+    const formValues={
+      id: item.id,
+      firstName: item.firstName,
+      lastName: item.lastName,
+      email: item.email,
+      gender: item.gender
+    };
+    setEditFormData(formValues)
+  }
   return (
     <div className="App">
     <div className='search-wrapper'>
@@ -79,7 +131,7 @@ function App() {
         </select>
       <Paginate itemsPerPage={itemsPerPage} currentPage={currentPage} changePage={changePage} users={handleSearch(users)}/> 
       </div>
-     
+     <form onSubmit={handleEditFormSubmit}>
       <table>
         <thead>
           <tr>
@@ -93,11 +145,16 @@ function App() {
         </thead>
         <tbody>
           {handleSearch(currentUsers).map((item)=>(
-            <ReadOnlyRow item={item} handleDelete={handleDelete} key={item.id}/>
+            <>
+            {editId===item.id ? (<EditableRow editFormData={editFormData} handleEditFormChange={handleEditFormChange} item={item} handleDelete={handleDelete} key={item.id} handleEdit={handleEdit}/>) :  (<ReadOnlyRow item={item} handleDelete={handleDelete} key={item.id} handleEdit={handleEdit}/>)}
+            
+           
+            </>
           ))}
         </tbody>
 
       </table>
+      </form>
     <h2>Add a Contact</h2>
     <form onSubmit={handleAddFormSubmit}>
     <input type='text' name='id' required='required' placeholder='Enter an id' onChange={handleAddFormChange}/>

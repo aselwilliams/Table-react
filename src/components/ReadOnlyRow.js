@@ -1,7 +1,7 @@
 import React from 'react';
 import {FiEdit, FiTrash2} from 'react-icons/fi'
 
-const ReadOnlyRow = ({item,handleDelete}) => {
+const ReadOnlyRow = ({item,handleDelete, handleEdit}) => {
   return (
     <tr >
               <td>{item.id}</td>
@@ -10,7 +10,7 @@ const ReadOnlyRow = ({item,handleDelete}) => {
               <td>{item.email}</td>
               <td>{item.gender}</td>
               <td className='d-fex justify-content-evenly'>
-                <FiEdit />
+                <FiEdit onClick={(e)=>handleEdit(e,item)}/>
                 <FiTrash2 onClick={()=>handleDelete(item.id)}/>
                 </td>
             </tr>
