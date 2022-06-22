@@ -3,13 +3,44 @@ import './App.css';
 import { useState } from 'react';
 import Paginate from './components/Paginate';
 import {FiEdit, FiTrash2} from 'react-icons/fi'
+import { nanoid } from 'nanoid';
 
 function App() {
   const [users, setUsers]=useState(Users)
   const [query, setQuery] =useState('')
   const [itemsPerPage,setItemsPerPage]=useState(5)
   const [currentPage,setCurrentPage]=useState(1)
-  // const [currentUsers,setCurrentUsers]=useState([])
+  // const [currentContacts,setCurrentContacts]=useState([])
+  const [addFormData,setAddFormData]=useState({
+    id:'',
+    firstName:'',
+    lastName:'',
+    email:'',
+    gender:'' 
+  })
+  const handleAddFormChange=(e)=>{
+    e.preventDefault();
+    const fieldName=e.target.getAttribute('name');
+    const fieldValue=e.target.value;
+
+    const newFormData={...addFormData};
+    newFormData[fieldName]=fieldValue;
+    setAddFormData(newFormData)
+  }
+  const handleAddFormSubmit=(e)=>{
+    e.preventDefault();
+
+    const newUser= {
+      id:nanoid(),
+      firstName: addFormData.firstName,
+      lastName: addFormData.lastName,
+      email: addFormData.email,
+      gender:addFormData.gender
+    }
+    const newUsers=[...users, newUser];
+    setUsers(newUsers)
+  }
+ 
   const changePage=(num)=>{
       setCurrentPage(num)
   }
@@ -26,8 +57,9 @@ function App() {
   }
 
   const handleDelete=(id)=>{
-    const copy=handleSearch(currentUsers).map((user)=>({...user}))
+    const copy=users.map((user)=>({...user}))
     setUsers(copy.filter((el)=>el.id!==id))
+   
   }
   return (
     <div className="App">
@@ -39,10 +71,11 @@ function App() {
         <label>Items per Page: </label>
         <select onChange={(e)=>setItemsPerPage(e.target.value)}>
         <option value='5'>5</option>
+        <option value='8'>8</option>
         <option value='10'>10</option>
         <option value='15'>15</option>
         <option value='20'>20</option>
-        <option value='25'>25</option>
+        
         </select>
       <Paginate itemsPerPage={itemsPerPage} currentPage={currentPage} changePage={changePage} users={handleSearch(users)}/> 
       </div>
@@ -75,7 +108,15 @@ function App() {
         </tbody>
 
       </table>
-    
+    <h2>Add a Contact</h2>
+    <form onSubmit={handleAddFormSubmit}>
+    <input type='text' name='id' required='required' placeholder='Enter an id' onChange={handleAddFormChange}/>
+    <input type='text' name='firstName' required='required' placeholder='Enter a first name' onChange={handleAddFormChange}/>
+    <input type='text' name='lastName' required='required' placeholder='Enter a last name' onChange={handleAddFormChange}/>
+    <input type='email' name='email' required='required' placeholder='Enter an email' onChange={handleAddFormChange}/>
+    <input type='text' name='gender' required='required' placeholder='Enter a gender' onChange={handleAddFormChange}/>
+    <button type='submit'>Add</button>
+    </form>
     </div>
   );
 }

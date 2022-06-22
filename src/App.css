@@ -42,3 +42,7 @@ button {
   margin: auto;
   width: 70vw;
 }
+input{
+  padding: 7px;
+  width: 260px;
+}
