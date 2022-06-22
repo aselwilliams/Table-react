@@ -2,8 +2,8 @@ import {Users} from './data'
 import './App.css';
 import { useState } from 'react';
 import Paginate from './components/Paginate';
-import {FiEdit, FiTrash2} from 'react-icons/fi'
 import { nanoid } from 'nanoid';
+import ReadOnlyRow from './components/ReadOnlyRow';
 
 function App() {
   const [users, setUsers]=useState(Users)
@@ -93,17 +93,7 @@ function App() {
         </thead>
         <tbody>
           {handleSearch(currentUsers).map((item)=>(
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.first_name}</td>
-              <td>{item.last_name}</td>
-              <td>{item.email}</td>
-              <td>{item.gender}</td>
-              <td className='d-fex justify-content-evenly'>
-                <FiEdit />
-                <FiTrash2 onClick={()=>handleDelete(item.id)}/>
-                </td>
-            </tr>
+            <ReadOnlyRow item={item} handleDelete={handleDelete} key={item.id}/>
           ))}
         </tbody>
 
