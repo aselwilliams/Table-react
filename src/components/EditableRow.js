@@ -2,7 +2,7 @@ import React from 'react';
 import {FiEdit, FiTrash2} from 'react-icons/fi';
 import {GrSave} from 'react-icons/gr'
 
-const EditableRow = ({editFormData, handleEditFormChange,item, handleEdit, handleDelete}) => {
+const EditableRow = ({editFormData, handleEditFormChange,item, handleCancel}) => {
   return (
   <tr>
       <td>
@@ -20,9 +20,9 @@ const EditableRow = ({editFormData, handleEditFormChange,item, handleEdit, handl
       <td>
       <input type='text' value={editFormData.gender} required='required' placeholder='Enter a gender...' name='gender' onChange={handleEditFormChange}/>
       </td>
-      <td className='d-fex justify-content-evenly'>
-                <GrSave />
-                <FiTrash2 onClick={()=>handleDelete(item.id)}/>
+      <td className='d-flex justify-content-evenly'>
+                <button type='submit'>Save</button>
+                <button onClick={handleCancel}>Cancel</button>
                 </td>
   </tr>
   )

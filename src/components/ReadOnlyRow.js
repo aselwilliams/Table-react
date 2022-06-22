@@ -9,7 +9,7 @@ const ReadOnlyRow = ({item,handleDelete, handleEdit}) => {
               <td>{item.last_name}</td>
               <td>{item.email}</td>
               <td>{item.gender}</td>
-              <td className='d-fex justify-content-evenly'>
+              <td className='d-flex justify-content-evenly'>
                 <FiEdit onClick={(e)=>handleEdit(e,item)}/>
                 <FiTrash2 onClick={()=>handleDelete(item.id)}/>
                 </td>

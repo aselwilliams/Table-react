@@ -1,4 +1,4 @@
-import {Users} from './data'
+import {Contacts} from './data'
 import './App.css';
 import { useState } from 'react';
 import Paginate from './components/Paginate';
@@ -7,7 +7,7 @@ import ReadOnlyRow from './components/ReadOnlyRow';
 import EditableRow from './components/EditableRow';
 
 function App() {
-  const [users, setUsers]=useState(Users)
+  const [users, setUsers]=useState(Contacts)
   const [query, setQuery] =useState('')
   const [itemsPerPage,setItemsPerPage]=useState(5)
   const [currentPage,setCurrentPage]=useState(1)
@@ -79,6 +79,9 @@ const handleEditFormSubmit=(e)=>{
   setEditId(null)
 }
 
+const handleCancel=()=>{
+  setEditId(null)
+}
   const changePage=(num)=>{
       setCurrentPage(num)
   }
@@ -86,13 +89,14 @@ const handleEditFormSubmit=(e)=>{
   const indexOfLastItem=currentPage*itemsPerPage;
   const indexOfFirstItem=indexOfLastItem-itemsPerPage;
   const currentUsers=users.slice(indexOfFirstItem, indexOfLastItem)
-  // const keys=['first_name','last_name','email']
-  // const handleSearch=(users)=>{
-  //   return users.filter((item)=>keys.some((key)=>item[key].toLowerCase().includes(query)))
-  // }
+  
+  const keys=['first_name','last_name','email']
   const handleSearch=(users)=>{
-   return users.filter((item)=>item.first_name.toLowerCase().includes(query.toLowerCase()))
+    return users.filter((item)=>keys.some((key)=>item[key].toLowerCase().includes(query)))
   }
+  // const handleSearch=(users)=>{
+  //  return users.filter((item)=>item.first_name.toLowerCase().includes(query.toLowerCase()))
+  // }
 
   const handleDelete=(id)=>{
     const copy=users.map((user)=>({...user}))
@@ -106,8 +110,8 @@ const handleEditFormSubmit=(e)=>{
 
     const formValues={
       id: item.id,
-      firstName: item.firstName,
-      lastName: item.lastName,
+      firstName: item.first_name,
+      lastName: item.last_name,
       email: item.email,
       gender: item.gender
     };
@@ -144,13 +148,13 @@ const handleEditFormSubmit=(e)=>{
           </tr>
         </thead>
         <tbody>
-          {handleSearch(currentUsers).map((item)=>(
-            <>
-            {editId===item.id ? (<EditableRow editFormData={editFormData} handleEditFormChange={handleEditFormChange} item={item} handleDelete={handleDelete} key={item.id} handleEdit={handleEdit}/>) :  (<ReadOnlyRow item={item} handleDelete={handleDelete} key={item.id} handleEdit={handleEdit}/>)}
-            
-           
+          {handleSearch(currentUsers).map((item)=>{
+            return (
+              <>
+            {editId===item.id ? (<EditableRow editFormData={editFormData} handleEditFormChange={handleEditFormChange} item={item} handleCancel={handleCancel} key={item.id} />) :  (<ReadOnlyRow item={item} handleDelete={handleDelete} key={item.id} handleEdit={handleEdit}/>)}
             </>
-          ))}
+          )}            
+          )}
         </tbody>
 
       </table>
